@@ -1,1 +1,4 @@
-This is a template readme file to enforce main default branch. Edit this file as you see fit.
+# Project readme
+For the prototype we have created a figma project, which doesn't need additional software to be ran.
+
+This document will be updated as the development of the project continues.
