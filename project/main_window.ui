@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RoadWatch</class>
- <widget class="QWidget" name="RoadWatch">
+ <class>main_window</class>
+ <widget class="QWidget" name="main_window">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -18,7 +18,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTabWidget" name="viewPanel">
+  <widget class="QTabWidget" name="view_panel">
    <property name="geometry">
     <rect>
      <x>300</x>
@@ -28,31 +28,31 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>0</number>
    </property>
-   <widget class="QWidget" name="todayTab">
+   <widget class="QWidget" name="today_tab">
     <attribute name="title">
      <string>Today</string>
     </attribute>
-    <widget class="QScrollArea" name="scrollArea">
+    <widget class="QScrollArea" name="today_scroll_area">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
        <width>1300</width>
-       <height>870</height>
+       <height>871</height>
       </rect>
      </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
+     <widget class="QWidget" name="today_scroll_area_contents">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>1298</width>
-        <height>868</height>
+        <height>869</height>
        </rect>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget_5">
@@ -64,7 +64,7 @@
          <height>61</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="today_scroll_area_layout">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
         </property>
@@ -81,9 +81,9 @@
          <number>6</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="titleLayout">
+         <layout class="QHBoxLayout" name="today_title_layout">
           <item>
-           <widget class="QLabel" name="cityNameLabel">
+           <widget class="QLabel" name="today_city_name_label">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -110,12 +110,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="update">
+           <layout class="QHBoxLayout" name="today_update_button_layout">
             <property name="spacing">
              <number>18</number>
             </property>
             <item>
-             <widget class="QLabel" name="updateLabel">
+             <widget class="QLabel" name="today_update_button_label">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -131,7 +131,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="updatePushButton">
+             <widget class="QPushButton" name="today_update_push_button">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -152,11 +152,11 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="historyTab">
+   <widget class="QWidget" name="history_tab">
     <attribute name="title">
      <string>History</string>
     </attribute>
-    <widget class="QScrollArea" name="scrollArea_2">
+    <widget class="QScrollArea" name="history_scroll_area">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -168,7 +168,7 @@
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents_2">
+     <widget class="QWidget" name="history_scroll_area_contents">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -186,7 +186,7 @@
          <height>61</height>
         </rect>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="history_scroll_area_layout">
         <property name="sizeConstraint">
          <enum>QLayout::SetMinimumSize</enum>
         </property>
@@ -203,9 +203,9 @@
          <number>6</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="titleLayout_2">
+         <layout class="QHBoxLayout" name="history_title_layout">
           <item>
-           <widget class="QLabel" name="cityNameLabel_2">
+           <widget class="QLabel" name="history_city_name_label">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -232,12 +232,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="saveDataset">
+           <layout class="QHBoxLayout" name="history_save_button_layout">
             <property name="spacing">
              <number>18</number>
             </property>
             <item>
-             <widget class="QLabel" name="saveLabel">
+             <widget class="QLabel" name="history_save_button_label">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -253,7 +253,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="savePushButton">
+             <widget class="QPushButton" name="history_save_push_button">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -274,11 +274,11 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="compareTab">
+   <widget class="QWidget" name="compare_tab">
     <attribute name="title">
      <string>Compare</string>
     </attribute>
-    <widget class="QScrollArea" name="scrollArea_3">
+    <widget class="QScrollArea" name="compare_scroll_area">
      <property name="geometry">
       <rect>
        <x>0</x>
@@ -290,7 +290,7 @@
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents_3">
+     <widget class="QWidget" name="compare_scroll_area_contents">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -308,7 +308,7 @@
          <height>61</height>
         </rect>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="compare_scroll_area_layout">
         <property name="spacing">
          <number>25</number>
         </property>
@@ -325,9 +325,9 @@
          <number>6</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="titleLayout_3">
+         <layout class="QHBoxLayout" name="left_compare_title_layout">
           <item>
-           <widget class="QLabel" name="cityNameLabel_3">
+           <widget class="QLabel" name="left_compare_city_name_label">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -354,12 +354,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="saveDataset_2">
+           <layout class="QHBoxLayout" name="left_compare_load_timeline_button_layout">
             <property name="spacing">
              <number>18</number>
             </property>
             <item>
-             <widget class="QLabel" name="saveLabel_2">
+             <widget class="QLabel" name="left_compare_load_timeline_label">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -375,7 +375,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="savePushButton_2">
+             <widget class="QPushButton" name="left_compare_load_timeline_push_button">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -392,16 +392,16 @@
          </layout>
         </item>
         <item>
-         <widget class="Line" name="line_2">
+         <widget class="Line" name="compare_separator_line">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="titleLayout_5">
+         <layout class="QHBoxLayout" name="right_compare_title_layout">
           <item>
-           <widget class="QLabel" name="cityNameLabel_5">
+           <widget class="QLabel" name="right_compare_city_name_label">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -428,12 +428,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="saveDataset_4">
+           <layout class="QHBoxLayout" name="right_compare_load_timeline_button_layout">
             <property name="spacing">
              <number>18</number>
             </property>
             <item>
-             <widget class="QLabel" name="saveLabel_4">
+             <widget class="QLabel" name="right_compare_load_timeline_label">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -449,7 +449,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="savePushButton_4">
+             <widget class="QPushButton" name="right_compare_load_timeline_push_button">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -471,13 +471,13 @@
     </widget>
    </widget>
   </widget>
-  <widget class="QWidget" name="sidePanel" native="true">
+  <widget class="QWidget" name="side_panel" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>-60</y>
      <width>300</width>
-     <height>900</height>
+     <height>961</height>
     </rect>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget_4">
@@ -486,10 +486,10 @@
       <x>0</x>
       <y>60</y>
       <width>301</width>
-      <height>561</height>
+      <height>580</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="menuItems">
+    <layout class="QVBoxLayout" name="side_panel_items_layout">
      <property name="spacing">
       <number>18</number>
      </property>
@@ -506,7 +506,7 @@
       <number>18</number>
      </property>
      <item>
-      <widget class="QLabel" name="applicationTitle">
+      <widget class="QLabel" name="application_title_label">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -524,9 +524,9 @@
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="citySelection">
+      <layout class="QVBoxLayout" name="city_selection_layout">
        <item>
-        <widget class="QLabel" name="cityLabel">
+        <widget class="QLabel" name="city_label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -539,7 +539,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="citySelectionComboBox">
+        <widget class="QComboBox" name="city_selection_combo_box">
          <property name="currentText">
           <string>Helsinki</string>
          </property>
@@ -573,7 +573,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="dataSelection">
+      <layout class="QVBoxLayout" name="data_selection_layout">
        <property name="spacing">
         <number>5</number>
        </property>
@@ -581,21 +581,21 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QCheckBox" name="weatherInfoCheckBox">
+        <widget class="QCheckBox" name="weather_info_checkbox">
          <property name="text">
           <string>Weather info</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="roadInfoCheckBox">
+        <widget class="QCheckBox" name="road_info_checkbox">
          <property name="text">
           <string>Road info</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="weatherInfoSubSelection">
+        <layout class="QVBoxLayout" name="weather_info_sub_selection_layout">
          <property name="spacing">
           <number>5</number>
          </property>
@@ -606,28 +606,28 @@
           <number>18</number>
          </property>
          <item>
-          <widget class="QCheckBox" name="roadCameraCheckBox">
+          <widget class="QCheckBox" name="road_camera_checkbox">
            <property name="text">
             <string>Road camera</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="trafficMessagesCheckBox">
+          <widget class="QCheckBox" name="traffic_messages_checkbox">
            <property name="text">
             <string>Traffic messages</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="roadMaintenanceCheckBox">
+          <widget class="QCheckBox" name="road_maintenance_checkbox">
            <property name="text">
             <string>Road maintenance</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="roadConditionCheckBox">
+          <widget class="QCheckBox" name="road_condition_checkbox">
            <property name="text">
             <string>Road condition</string>
            </property>
@@ -638,12 +638,12 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="saveFavourite">
+      <layout class="QHBoxLayout" name="save_favourite_layout">
        <property name="spacing">
         <number>18</number>
        </property>
        <item>
-        <widget class="QLabel" name="saveFavouriteLabel">
+        <widget class="QLabel" name="save_favourite_label">
          <property name="text">
           <string>Save as favourite</string>
          </property>
@@ -653,7 +653,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="saveFavouritePushButton">
+        <widget class="QPushButton" name="save_favourite_push_button">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -668,16 +668,16 @@
       </layout>
      </item>
      <item>
-      <widget class="Line" name="line">
+      <widget class="Line" name="menu_line_1">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="favouriteSelection">
+      <layout class="QVBoxLayout" name="favourite_selection_layout">
        <item>
-        <widget class="QLabel" name="favouriteLabel">
+        <widget class="QLabel" name="favourite_label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -690,7 +690,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="favouriteSelectionComboBox_2">
+        <widget class="QComboBox" name="favourite_selection_combo_box">
          <property name="currentText">
           <string/>
          </property>
@@ -699,7 +699,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="timelineSelection">
+      <layout class="QVBoxLayout" name="timeline_selection_layout">
        <property name="spacing">
         <number>6</number>
        </property>
@@ -707,7 +707,14 @@
         <number>36</number>
        </property>
        <item>
-        <widget class="QLabel" name="timelineLabel">
+        <widget class="Line" name="menu_line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="timeline_label">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -719,35 +726,43 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="dateSelections">
+        <layout class="QHBoxLayout" name="date_selections_layout">
          <property name="spacing">
           <number>18</number>
          </property>
          <item>
-          <layout class="QVBoxLayout" name="startDateSelection">
+          <layout class="QVBoxLayout" name="start_date_selection_layout">
            <item>
-            <widget class="QLabel" name="startDateLabel">
+            <widget class="QLabel" name="start_date_label">
              <property name="text">
               <string>Start date</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QDateEdit" name="startDateEdit"/>
+            <widget class="QDateEdit" name="start_date_edit">
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="endDateSelection">
+          <layout class="QVBoxLayout" name="end_date_selection_layout">
            <item>
-            <widget class="QLabel" name="endDateLabel">
+            <widget class="QLabel" name="end_date_label">
              <property name="text">
               <string>End date</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QDateEdit" name="endDateEdit"/>
+            <widget class="QDateEdit" name="end_date_edit">
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
