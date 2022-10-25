@@ -8,6 +8,9 @@ For a forecast, the end time of the forecast is required.
 Requests are parsed into python dict containers and returned.
 """
 
+import datetime
+import requests
+
 
 def weather_data():
     pass
