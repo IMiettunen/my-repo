@@ -20,7 +20,7 @@ fmi_coordinates = {"TAMPERE": "61.49911,23.78712", "HELSINKI": "60.192059,24.945
 digitrafi_maintenance_base_url = "https://tie.digitraffic.fi/api/maintenance/v1/tracking/routes?endFrom="
 
 # minlon, minlat, maxlon, maxlat
-fmi_bboxes = {"TAMPERE": "", "HELSINKI": "", "OULU": "", "TURKU": "", "LAPPEENRANTA": ""}
+FMISIDS = {"TAMPERE": "101123", "HELSINKI": "101007", "OULU": "101789", "TURKU": "100948", "LAPPEENRANTA": "101247"}
 
 
 digitrafi_coordinates = {"TAMPERE": "23.652361,61.435179,23.865908,61.520098",
@@ -35,8 +35,8 @@ digitrafi_location_codes = {"TAMPERE": "408", "HELSINKI": "73", "OULU": "291",
 def weather_data(city, end_time=datetime.now(), start_time=datetime.now()-timedelta(days=1), timestep="30"):
     start = start_time.strftime("%Y-%m-%dT%H:%M:%SZ")
     end = end_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-    url = fmi_base_url + fmi_queries[1] + "&latlon=" + fmi_coordinates[city] + "&timestep=" + timestep + "&starttime" \
-        "=" + start + "&endtime=" + end + "&parameters=temperature,windspeedms"
+    url = fmi_base_url + fmi_queries[1] + "&fmisid=" + FMISIDS[city] + "&timestep=" + timestep + "&starttime" \
+        "=" + start + "&endtime=" + end
 
     return url
 
