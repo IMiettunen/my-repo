@@ -1,0 +1,14 @@
+build-*
+.vscode
+*.o
+*.json
+local_configurations.py
+
+html/
+
+!build*.py
+
+*.class
+
+target/
+/Sisu/nbproject/

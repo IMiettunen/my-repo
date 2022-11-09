@@ -1,0 +1,64 @@
+
+/* 
+    Created on : 21.4.2022, 15.27.50
+    Author     : 
+*/
+
+.root{
+  -fx-background-color: linear-gradient(
+    from 0% 0% to 100% 200%,
+    repeat,
+    #fbeee6 0%,
+    #8A2BE2 50%
+  );
+  -fx-font-family: "Lucida Console";
+}
+
+#login-button{
+    -fx-background-color: indigo;
+    -fx-text-fill: white;
+}
+
+.toggleButton{
+  -fx-background-color: #bf8aef;
+  -fx-text-fill: white;
+  -fx-spacing: 40;
+  
+}
+
+.toggleButton:selected{
+  -fx-background-color: indigo;
+  -fx-text-fill: white;
+  -fx-spacing: 40;
+  
+}
+
+
+
+.button{
+    -fx-text-fill: rgb(49, 89, 23);
+    -fx-border-color: rgb(49, 89, 23);
+    -fx-border-radius: 5;
+    -fx-padding: 3 6 6 6;
+}
+
+#enroll-button{
+-fx-background-color: #a760e9;
+  -fx-text-fill: white;
+  -fx-padding: 10,10,10,10;
+  -fx-spacing: 40;
+}
+
+#courseInfoBox{
+   -fx-padding: 15;
+   -fx-spacing: 10;
+   -fx-fill: grey;
+}
+
+.treeView .tree-cell {
+    -fx-background-color: #dcbff6;   
+}
+.VBox {
+    -fx-background-color: #dcbff6;
+    
+}
