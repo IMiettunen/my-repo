@@ -1,2 +1,2 @@
 #my-repo
-#Contains my favourite projects (so faronly schoolprojects)
+#Contains my favourite projects (so far only schoolprojects)
