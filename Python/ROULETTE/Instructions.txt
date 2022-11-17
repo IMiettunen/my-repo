@@ -1,0 +1,21 @@
+1. Add money to your wallet
+   (or play as a poor person)
+
+2. Choose a number/numbers you want to bet on(separated by comma ",").
+   OR choose a color.
+
+3. Choose a bet amount that is suitable for your bankroll
+   (Bet will be divided evenly between the numbers you pick)
+
+4. 'Spin the wheel' for numbers, or press the color you chose.
+
+5. Wait for the wheel to spin and reveal the winning number
+
+6. Collect your winnings, if you got lucky
+
+7. Place another bet and try again, or cash out pressing quit
+
+
+Pay off:
+Colors: 2 x bet
+Numbers: 35 // (number of chosen numbers) x bet
