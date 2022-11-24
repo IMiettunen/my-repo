@@ -140,7 +140,7 @@ def directionTo(ac_x, ac_y, goal_x, goal_y):
             return 0
         else:
             return 180
-    return normalize_heading(math.degrees(math.atan2(goal_y-ac_y, goal_x-ac_x)))
+    return normalize_heading(math.degrees(math.atan2(goal_y - ac_y,  goal_x - ac_x)))
 
 def pointAhead(ac_x, ac_y, goal_x, goal_y, ac_dir):
     """Tells if point is in +-90 degree sector in front of aircraft
@@ -246,12 +246,12 @@ def generate_commands(game_state):
             if ap["name"] == aircraft["destination"]:
                 airport = ap
 
-        #Aircraft direction and coordinates
+        #Aircraft direction and coordinates rounded to two decimals to avoid unnecessary precision (this precision found most efficient in testing)
         ac_dir = aircraft["direction"]
         ac_x = round(aircraft["position"]["x"],2)
         ac_y = round(aircraft["position"]["y"],2)
 
-        #Airport approach direction and coordinates
+        #Airport approach direction and coordinates(already rounded to zero decimals)
         ap_dir = airport["direction"]
         ap_x = airport["position"]["x"]
         ap_y = airport["position"]["y"]
@@ -260,7 +260,7 @@ def generate_commands(game_state):
         approach_x, approach_y = approachPoint(ac_dir, ap_dir, ap_x, ap_y)
 
         #Rounded direction from aircraft's coordinates to approach point's coordinates
-        #and rounded direction from aircraft's coordinates to airports point's coordinates
+        #and rounded direction from aircraft's coordinates to airport's' coordinates
         dir_to_app = round(directionTo(ac_x, ac_y, approach_x, approach_y))
         dir_to_airport = round(directionTo(ac_x, ac_y, ap_x, ap_y))
   
@@ -268,8 +268,9 @@ def generate_commands(game_state):
         if len(game_state["aircrafts"]) > 1 and collision(game_state["aircrafts"], aircraft, dir_to_airport):  
             new_dir = normalize_heading(ac_dir-20)
 
-        #Seuraavaa kahta elif lausetta yhdistämällä viimeisestä tehtävästä saa erilaisia tuloksia, koneet lentää miten sattuu mutta menee maaliin.
+        #Seuraavaa kahta elif lausetta yhdistelemällä viimeisestä tehtävästä saa erilaisia tuloksia, koneet lentää miten sattuu mutta menee maaliin. Jätetty koodiin mielenkiinnosta.
         #Molemmilla yhdessä saa 138pts
+        
         #Pelkällä tällä 122pts
         #If aircraft is turnt left 10degrees and collision would happen -> turn right 10degrees
         elif collision(game_state["aircrafts"], aircraft, ac_dir+10):
