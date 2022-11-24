@@ -1,7 +1,6 @@
 #Valmiiseen pohjaan kommentoidut funktiot toteuttanut:
 #Ilari Miettunen
 
-#Tämä versio selvittää kaikki tasot hyvillä pisteillä
 
 from dotenv import dotenv_values
 import requests
