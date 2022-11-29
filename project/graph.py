@@ -104,15 +104,15 @@ class MplCanvas(FigureCanvasQTAgg):
 
 
 class GraphWidget(QWidget):
-    def __init__(self, data):
+    def __init__(self):
         super().__init__()
         vlayout = QVBoxLayout()
         hlayout = QHBoxLayout()
         RBlayout = QGridLayout()
         self.span = 12
-        self.data = data
+        self.data = forecast
         # self.xData = [dt.datetime.strptime(h, '%H:%M')for h in data["Tampere"]["Times"]]
-        self.xData = data["Tampere"]["Times"]
+        self.xData = self.data["Tampere"]["Times"]
 
         twoRB = QRadioButton("2h")
         twoRB.toggled.connect(self.onClicked)
@@ -185,7 +185,7 @@ class GraphWidget(QWidget):
         # Gets x-axis limits from ongoing hour(rounded down) and chosen forecast length
         # returns indexes for start and finish
         #now = dt.datetime.now().hour()
-        now = dt.datetime.now().replace(microsecond=0, second=0, minute=0)
+        now = dt.datetime.now().replace(microsecond=0, second=0, minute=0, day=28)
         start = list(self.data["Tampere"]["Times"]).index(now)
 
         return start, start + self.span
