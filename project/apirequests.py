@@ -36,9 +36,9 @@ digitrafi_coordinates = {"TAMPERE": "23.652361,61.435179,23.865908,61.520098",
                          "TURKU": "22.197470,60.422136,22.344069,60.474289",
                          "LAPPEENRANTA": "28.106238,61.025745,28.272406,61.071282"}
 
-weather_camera_ids = {"TAMPERE":"C04507", "HELSINKI":"C01675", "OULU":"C12503",
-                      "TURKU":"C02520", "LAPPEENRANTA":"C03558"}
-
+weather_camera_ids = {"TAMPERE": "C04507", "HELSINKI": "C01675",
+                      "OULU": "C12503", "TURKU": "C02520",
+                      "LAPPEENRANTA": "C03558"}
 
 
 def weather_data(city, start_time=datetime.now() - timedelta(days=2), end_time=datetime.now() - timedelta(days=1),
@@ -173,7 +173,7 @@ def get_traffic_messages(city, situation_type):
     :return: Dictionary which contains formatted traffic messages.
     """
     url = "https://tie.digitraffic.fi/api/traffic-message/v1" \
-          "/messages?inactiveHours=0&includeAreaGeometry=false&situationType=" \
+          "/messages?inactiveHours=0&includeAreaGeometry=false&situationType="\
           + situation_type
     response = requests.get(url)
     all_traffic_messages = response.json()
@@ -201,10 +201,8 @@ def format_traffic_messages(city, all_traffic_messages):
                 if type(coords) == list:
                     for cordPair in coords:
                         if len(cordPair) == 2:
-                            if cordPair[0] > coordinates[0] and \
-                                    cordPair[0] < coordinates[2] and \
-                                    cordPair[1] > coordinates[1] and \
-                                    cordPair[0] < coordinates[3]:
+                            if coordinates[0] < cordPair[0] < coordinates[2] and \
+                                    cordPair[1] > coordinates[1] and cordPair[0] < coordinates[3]:
                                 messages["situationType"].append(feature['properties']['situationType'])
                                 messages["name"].append(feature['properties']['announcements'][0]['features'][0]['name'])
                                 messages["comment"].append(feature['properties']['announcements'][0]['comment'])
@@ -311,8 +309,8 @@ def weather_cameras(city):
     image_url = camera_data['presets'][0]['history'][0]['imageUrl']
     image_response = requests.get(image_url)
 
-    if image_response.status_code == 200:
-        with open("test.jpg", 'wb') as f:
+    if image_response.status_code == 200:  # 200 means response OK
+        with open("weather_cam.jpg", 'wb') as f:
             f.write(image_response.content)
             return True
 
