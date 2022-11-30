@@ -36,6 +36,10 @@ digitrafi_coordinates = {"TAMPERE": "23.652361,61.435179,23.865908,61.520098",
                          "TURKU": "22.197470,60.422136,22.344069,60.474289",
                          "LAPPEENRANTA": "28.106238,61.025745,28.272406,61.071282"}
 
+weather_camera_ids = {"TAMPERE": "C04507", "HELSINKI": "C01675",
+                      "OULU": "C12503", "TURKU": "C02520",
+                      "LAPPEENRANTA": "C03558"}
+
 
 def weather_data(city, start_time=datetime.now() - timedelta(days=2), end_time=datetime.now() - timedelta(days=1),
                  timestep="60"):
@@ -97,7 +101,8 @@ def weather_forecast(city, start_time=datetime.now(), end_time=datetime.now() + 
 def road_data(city, start_time=datetime.now(), end_time=datetime.now() + timedelta(days=1), task_name="",
               situation_type=""):
     """
-    This function calls get functions for maintenance data, traffic messages and road condition.
+    This function calls get functions for maintenance data, traffic messages
+    and road condition. Function sends a request to get weather camera image.
 
     :param city: Choose between Tampere, Helsinki, Lappeenranta, Oulu and Turku. Parameter is string format and all caps.
     :param start_time: Datetime object, should be current time or later and before end_time.
@@ -112,6 +117,7 @@ def road_data(city, start_time=datetime.now(), end_time=datetime.now() + timedel
     maintenance_data = get_maintenance_data(city, start, end, task_name)
     traffic_messages = get_traffic_messages(city, situation_type)
     road_condition = get_road_condition(city)
+    camera_success = weather_cameras(city)
     return maintenance_data, traffic_messages, road_condition
 
 
@@ -138,7 +144,8 @@ def get_maintenance_data(city, start, end, task_name=""):
 
 def format_maintenance_data(city, maintenance_data):
     """
-    The function goes through the data retrieved from the API and formats the tasks and their start and end times.
+    The function goes through the data retrieved from the API and formats the
+    tasks and their start and end times.
 
     :param city: String all caps, region/city from which data is collected.
     :param maintenance_data: Data retrieved from the API edited in json format.
@@ -166,7 +173,7 @@ def get_traffic_messages(city, situation_type):
     :return: Dictionary which contains formatted traffic messages.
     """
     url = "https://tie.digitraffic.fi/api/traffic-message/v1" \
-          "/messages?inactiveHours=0&includeAreaGeometry=false&situationType=" \
+          "/messages?inactiveHours=0&includeAreaGeometry=false&situationType="\
           + situation_type
     response = requests.get(url)
     all_traffic_messages = response.json()
@@ -194,10 +201,8 @@ def format_traffic_messages(city, all_traffic_messages):
                 if type(coords) == list:
                     for cordPair in coords:
                         if len(cordPair) == 2:
-                            if cordPair[0] > coordinates[0] and \
-                                    cordPair[0] < coordinates[2] and \
-                                    cordPair[1] > coordinates[1] and \
-                                    cordPair[0] < coordinates[3]:
+                            if coordinates[0] < cordPair[0] < coordinates[2] and \
+                                    cordPair[1] > coordinates[1] and cordPair[0] < coordinates[3]:
                                 messages["situationType"].append(feature['properties']['situationType'])
                                 messages["name"].append(feature['properties']['announcements'][0]['features'][0]['name'])
                                 messages["comment"].append(feature['properties']['announcements'][0]['comment'])
@@ -287,3 +292,26 @@ def format_road_condition(city, condition_data):
     current_cond = {city: conditions}
     return current_cond
 
+
+def weather_cameras(city):
+    """
+    Gets a weather camera image of the wanted city from a specific weather
+    camera. And saves the camera image to the project path.
+
+    :param city: String all caps, region/city from which data is collected.
+    :return: Boolean value based on the success of image request.
+    """
+    camera_id = weather_camera_ids[city]
+    url = "https://tie.digitraffic.fi/api/weathercam/v1/stations/"+camera_id+"/history"
+    response = requests.get(url)
+    camera_data = response.json()
+
+    image_url = camera_data['presets'][0]['history'][0]['imageUrl']
+    image_response = requests.get(image_url)
+
+    if image_response.status_code == 200:  # 200 means response OK
+        with open("weather_cam.jpg", 'wb') as f:
+            f.write(image_response.content)
+            return True
+
+    return False
