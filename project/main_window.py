@@ -123,6 +123,20 @@ class UiMainWindow(QMainWindow):
 
         return self.history_tab
 
+    def save_timeline(self):
+        settings = self.get_current_settings()
+        # Save data of all the graphs and plots, messages, etc. with the settings
+
+        data = {
+            "settings": settings,
+            "data": None,
+        }
+
+        title = settings["city"] + " " + settings["start date"] + " - " + settings["end date"]
+        f = open("data/saves/" + title + ".json", "w")
+        json.dump(data, f)
+        f.close()
+
 
     def get_compare_tab(self):
         self.compare_tab = QtWidgets.QWidget()
