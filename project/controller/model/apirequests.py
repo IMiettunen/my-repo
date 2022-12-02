@@ -16,6 +16,9 @@ import requests
 from collections import Counter
 import operator
 from fmiopendata.wfs import download_stored_query
+import json
+
+import pathlib
 
 fmi_queries = ["fmi::forecast::harmonie::surface::point::multipointcoverage",
                "fmi::observations::weather::multipointcoverage",
@@ -123,14 +126,14 @@ def road_data(city, start_time=datetime.now(), end_time=datetime.now() + timedel
     return maintenance_data, traffic_messages, road_condition
 
 
-def get_maintenance_data(city, start, end, task_name=""):
+def get_maintenance_data(city, start, end, task_name):
     """
     Get function for maintenance data. Saves the API data to json. Calls for
     format_maintenance_data()-function for formatting the data.
 
     :param city: String all caps, region/city from which data is collected.
-    :param start: Datetime object. Should be earlier than end_time.
-    :param end: Datetime object.
+    :param start: String. Should be earlier than end_time.
+    :param end: String.
     :param task_name: String, default parameter.
     :return: Dictionary which contains formatted maintenance data.
     """
@@ -140,6 +143,8 @@ def get_maintenance_data(city, start, end, task_name=""):
           + "&yMax=" + coordinates[3] + "&taskId=" + task_name + "&domain=state-roads"
     response = requests.get(url)
     maintenance_data_temp = response.json()
+
+
     maintenance_data = format_maintenance_data(city, maintenance_data_temp)
     return maintenance_data
 
@@ -164,7 +169,7 @@ def format_maintenance_data(city, maintenance_data):
     return maintenance_data
 
 
-def get_traffic_messages(city, situation_type):
+def get_traffic_messages(city, situation_type=""):
     """
     Get function for traffic messages. Saves the API data to json. Calls for
     format_traffic_messages()-function for formatting the data.
@@ -311,8 +316,12 @@ def weather_cameras(city):
     image_url = camera_data['presets'][0]['history'][0]['imageUrl']
     image_response = requests.get(image_url)
 
+
+    path = pathlib.Path.cwd() / 'controller' / 'saves' / 'images' / 'weather_cam.jpg'
+
+
     if image_response.status_code == 200:  # 200 means response OK
-        with open("../weather_cam.jpg", 'wb') as f:
+        with path.open('wb') as f:
             f.write(image_response.content)
             return True
 

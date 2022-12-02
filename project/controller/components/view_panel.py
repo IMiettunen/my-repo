@@ -20,114 +20,143 @@ Compare:
 
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QWidget
+
 
 class ViewPanel(QWidget):
 
     def __init__(self,):
         super(ViewPanel, self).__init__()
 
+        self.view_panel = QtWidgets.QTabWidget()
+
         self.today_tab = QtWidgets.QWidget()
-        self.history_tab = QtWidgets.QWidget()
-        self.compare_tab = QtWidgets.QWidget()
+        self.today_tab_scroll_area = QtWidgets.QScrollArea()
+
+        self.history_tab_scroll_area = QtWidgets.QScrollArea()
+
+        self.compare_tab_scroll_area = QtWidgets.QScrollArea()
+        self.compare_tab_content_left = QtWidgets.QWidget()
+        self.compare_tab_content_right = QtWidgets.QWidget()
+
+        self.setup_view_panel()
 
 
-    # NÄÄ KAIKKI SETUP FUNKTIOT PITÄÄ VARMAAN VAAN POISTAA JA KORVAA JOLLAIN MALLAI  def set_today_content(self, content):
-    # JOKA SIT ASETTAA SEN SISÄLTÖNÄ OLEVAN WIDGETIN KYSEISEEN TABIIN
-    # SE SISÄLTÖ SIT VOITAIS LUODA TUOL VIEWISSÄ NII NOUDATTAIS MVC MALLIA.
-    # ELI SIIS SIIRTÄÄ TÄN NYKYSEN SCROLL AREAN YMPÄRILLE RAKENNETUN WIDGETIN VIEWIIN KOKONAAN
+    def set_today_tab_content(self, visualizations):
+        """
+        Sets content to today tab.
+        :param visualizations: QWidget, visualizations of the data
+        :return:
+        """
+
+        self.today_tab_scroll_area.setWidget(visualizations)
 
 
     def setup_today_tab(self):
         """
         Sets up the today tab.
-        :return:
+        :return: QWidget, today tab
         """
 
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
-        scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        scroll_area.setWidgetResizable(True)
+        self.today_tab_scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.today_tab_scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
+        self.today_tab_scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.today_tab_scroll_area.setWidgetResizable(True)
 
         scroll_area_layout = QtWidgets.QHBoxLayout()
         scroll_area_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_area_layout.addWidget(scroll_area)
+        scroll_area_layout.addWidget(self.today_tab_scroll_area)
         self.today_tab.setLayout(scroll_area_layout)
 
-        #visualizer = DataVisualization()
-        #buttons = visualizer.get_current_view()
-        spacer_layout = QtWidgets.QHBoxLayout()
-        horizontal_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        spacer_layout.addItem(horizontal_spacer)
-        #spacer_layout.addWidget(buttons)
-        spacer_layout.addItem(horizontal_spacer)
-
-        content = QtWidgets.QWidget()
-        content.setLayout(spacer_layout)
-        scroll_area.setWidget(content)
-
         return self.today_tab
+
+
+    def set_history_tab_content(self, visualizations):
+        """
+        Sets content to history tab.
+        :param visualizations: QWidget, visualizations of the data
+        :return:
+        """
+
+        self.history_tab_scroll_area.setWidget(visualizations)
 
 
     def setup_history_tab(self):
         """
         Sets up the history tab.
+        :return: QWidget, history tab
+        """
+
+        self.history_tab_scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.history_tab_scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
+        self.history_tab_scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.history_tab_scroll_area.setWidgetResizable(True)
+
+        scroll_area_layout = QtWidgets.QHBoxLayout()
+        scroll_area_layout.setContentsMargins(0, 0, 0, 0)
+        scroll_area_layout.addWidget(self.history_tab_scroll_area)
+        self.history_tab = QtWidgets.QWidget()
+        self.history_tab.setLayout(scroll_area_layout)
+
+        return self.history_tab
+
+
+    def set_compare_tab_content(self, visualizations, side):
+        """
+        Sets content to compare tab.
+        :param visualizations: QWidget, visualizations of the data
+        :param side: str, left or right side of the compare tab
         :return:
+        """
+
+        if side == "left":
+            self.compare_tab_content_left = visualizations
+
+        elif side == "right":
+            self.compare_tab_content_right = visualizations
+
+        compare_layout = QtWidgets.QHBoxLayout()
+        compare_layout.addWidget(self.compare_tab_content_left)
+        compare_layout.addWidget(self.compare_tab_content_right)
+
+        content = QtWidgets.QWidget()
+        content.setLayout(compare_layout)
+
+        self.compare_tab_scroll_area.setWidget(content)
+
+
+    def setup_compare_tab(self):
+        """
+        Sets up the compare tab.
+        :return: QWidget, compare tab
         """
 
         scroll_area = QtWidgets.QScrollArea()
         scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
         scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
         scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        scroll_area.setWidgetResizable(True)
 
         scroll_area_layout = QtWidgets.QHBoxLayout()
         scroll_area_layout.setContentsMargins(0, 0, 0, 0)
         scroll_area_layout.addWidget(scroll_area)
-        self.history_tab.setLayout(scroll_area_layout)
-
-        # visualizer = DataVisualization()
-        # buttons = visualizer.get_current_view()
-        spacer_layout = QtWidgets.QHBoxLayout()
-        horizontal_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        spacer_layout.addItem(horizontal_spacer)
-        # spacer_layout.addWidget(buttons)
-        spacer_layout.addItem(horizontal_spacer)
-
-        content = QtWidgets.QWidget()
-        content.setLayout(spacer_layout)
-        scroll_area.setWidget(content)
-
-        return self.history_tab
-
-
-    def setup_compare_tab(self):
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
-        scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        scroll_area_layout = QtWidgets.QHBoxLayout()
-        scroll_area_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_area_layout.addWidget(scroll_area)
+        self.compare_tab = QtWidgets.QWidget()
         self.compare_tab.setLayout(scroll_area_layout)
 
-        # visualizer = DataVisualization()
-        # buttons = visualizer.get_current_view()
-        spacer_layout = QtWidgets.QHBoxLayout()
-        horizontal_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding,
-                                                  QtWidgets.QSizePolicy.Expanding)
-        spacer_layout.addItem(horizontal_spacer)
-        # spacer_layout.addWidget(buttons)
-        spacer_layout.addItem(horizontal_spacer)
-
-        content = QtWidgets.QWidget()
-        content.setLayout(spacer_layout)
-        scroll_area.setWidget(content)
-
         return self.compare_tab
+
+
+    def setup_view_panel(self):
+        """
+        Sets up the view panel.
+        :return: QWidget, view panel
+        """
+
+        self.view_panel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.view_panel.addTab(self.setup_today_tab(), "Today")
+        self.view_panel.addTab(self.setup_history_tab(), "History")
+        self.view_panel.addTab(self.setup_compare_tab(), "Compare")
+        self.view_panel.setCurrentIndex(0)
 
 
     def get_view_panel(self):
@@ -135,16 +164,5 @@ class ViewPanel(QWidget):
         Creates the view panel.
         :return: QTabWidget, view panel
         """
-        view_panel = QtWidgets.QTabWidget()
-        view_panel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
-        view_panel.addTab(self.setup_today_tab(), "")
-        view_panel.setTabText(view_panel.indexOf(self.today_tab), "Today")
-        view_panel.addTab(self.setup_history_tab(), "")
-        view_panel.setTabText(view_panel.indexOf(self.history_tab), "History")
-        view_panel.addTab(self.setup_compare_tab(), "")
-        view_panel.setTabText(view_panel.indexOf(self.compare_tab), "Compare")
-        view_panel.setCurrentIndex(0)
-
-
-        return view_panel
+        return self.view_panel

@@ -3,91 +3,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
-from matplotlib.widgets import CheckButtons
 import datetime as dt
 import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
 import random as rand
-import matplotlib.markers
 import PyQt5.QtCore
 
-# Testdata containing hourly weather forecast (Location, Time, Temperature, windspeed)
-forecast = {
-    'Tampere': {
-        'Times': [dt.datetime(2022, 11, 28, 0, 0), dt.datetime(2022, 11, 28, 1, 0), dt.datetime(2022, 11, 28, 2, 0),
-                  dt.datetime(2022, 11, 28, 3, 0), dt.datetime(2022, 11, 28, 4, 0), dt.datetime(
-                      2022, 11, 28, 5, 0), dt.datetime(2022, 11, 28, 6, 0),
-                  dt.datetime(2022, 11, 28, 7, 0), dt.datetime(2022, 11, 28, 8, 0), dt.datetime(
-                      2022, 11, 28, 9, 0), dt.datetime(2022, 11, 28, 10, 0),
-                  dt.datetime(2022, 11, 28, 11, 0), dt.datetime(2022, 11, 28, 12, 0), dt.datetime(
-                      2022, 11, 28, 13, 0), dt.datetime(2022, 11, 28, 14, 0),
-                  dt.datetime(2022, 11, 28, 15, 0), dt.datetime(2022, 11, 28, 16, 0), dt.datetime(
-                      2022, 11, 28, 17, 0), dt.datetime(2022, 11, 28, 18, 0),
-                  dt.datetime(2022, 11, 28, 19, 0), dt.datetime(2022, 11, 28, 20, 0), dt.datetime(
-                      2022, 11, 28, 21, 0), dt.datetime(2022, 11, 28, 22, 0),
-                  dt.datetime(2022, 11, 28, 23, 0)],
-
-        'Temperature': {
-            'values': [4, 4, 3, 3, 3, 4, 4, 5, 5, 6, 7, 7, 8, 9, 9, 11, 12, 12, 10, 9, 8, 7, 6, 5],
-            'unit': 'xx'
-        },
-
-        'windspeedms': {
-            'values': [6, 7, 8, 7, 8, 7, 6, 5, 3, 3, 1, 2, 1, 2, 2, 3, 4, 5, 6, 7, 6, 7, 8, 8],
-            'unit': 'xx'
-        }
-    }
-}
-
-# Testdata containing daily averages for a month (Location, Time, Temperature, windspeed, cloudcoverage)
-observed = {
-    'Tampere': {
-        'Times': [dt.datetime(2022, 11, 1, 0, 0), dt.datetime(2022, 11, 2, 0, 0),
-                  dt.datetime(2022, 11, 3, 0, 0),
-                  dt.datetime(2022, 11, 4, 0, 0), dt.datetime(
-                      2022, 11, 5, 0, 0),
-                  dt.datetime(2022, 11, 6, 0, 0), dt.datetime(
-                      2022, 11, 7, 0, 0),
-                  dt.datetime(2022, 11, 8, 0, 0), dt.datetime(
-                      2022, 11, 9, 0, 0),
-                  dt.datetime(2022, 11, 10, 0, 0), dt.datetime(
-                      2022, 11, 11, 0, 0),
-                  dt.datetime(2022, 11, 12, 0, 0), dt.datetime(
-                      2022, 11, 13, 0, 0),
-                  dt.datetime(2022, 11, 14, 0, 0), dt.datetime(
-                      2022, 11, 15, 0, 0),
-                  dt.datetime(2022, 11, 16, 0, 0), dt.datetime(
-                      2022, 11, 17, 0, 0),
-                  dt.datetime(2022, 11, 18, 0, 0), dt.datetime(
-                      2022, 11, 19, 0, 0),
-                  dt.datetime(2022, 11, 20, 0, 0), dt.datetime(
-                      2022, 11, 21, 0, 0),
-                  dt.datetime(2022, 11, 22, 0, 0), dt.datetime(
-                      2022, 11, 23, 0, 0),
-                  dt.datetime(2022, 11, 24, 0, 0), dt.datetime(
-                      2022, 11, 25, 0, 0),
-                  dt.datetime(2022, 11, 26, 0, 0), dt.datetime(
-                      2022, 11, 27, 0, 0),
-                  dt.datetime(2022, 11, 28, 0, 0), dt.datetime(
-                      2022, 11, 29, 0, 0),
-                  dt.datetime(2022, 11, 30, 0, 0)],
-
-        'Temperature': {
-            'values': [4, 4, 3, 3, 3, 4, 4, 5, 5, 6, 7, 7, 8, 9, 9, 11, 12, 12, 10, 9, 8, 7, 6, 5, 4, 5, 6, 5, 8, 6],
-            'unit': 'degC'
-        },
-        'windspeedms': {
-            'values': [6, 7, 8, 7, 8, 7, 6, 5, 3, 3, 1, 2, 1, 2, 2, 3, 4, 5, 6, 7, 6, 7, 8, 8, 1, 2, 2, 3, 4, 5],
-            'unit': 'm/s'
-        },
-        'Cloud': {
-            'values': [6, 7, 8, 7, 8, 7, 6, 5, 3, 2, 1, 1, 0, 0, 0, 3, 4, 5, 4, 6, 7, 7, 8, 8, 0, 0, 3, 4, 5, 4],
-            'unit': '1/8'
-        }
-    }
-}
-
-
+"""This class generates visualizations of requested weather data. Temperature is presented in degrees celsius in linegraph, 
+    wind is presented in m/s in scattered graph and cloud coverage is presented in oktas (x/8) in scattered graph. Forecast weather can
+    be choose to be shown for 2,4,6,8 or 12 hours. Observed weather shows daily average for every day in given timeframe
+"""
 class MplCanvas(FigureCanvasQTAgg):
     """A control which can be used to embded a matplotlib figure.
 
@@ -95,20 +20,16 @@ class MplCanvas(FigureCanvasQTAgg):
         FigureCanvasQTAgg (class): A class MplCanvas inherits
     """
 
-    def __init__(self):  # , parent=None, width=5, height=4, dpi=100
-        fig = Figure()  # figsize=(width, height), dpi=dpi
+    def __init__(self):
+        fig = Figure() 
         self.ax1 = fig.add_subplot()
         self.ax2 = self.ax1.twinx()
         self.ax3 = self.ax1.twinx()
         self.ax3.spines.right.set_position(("axes", 1.05))
-        #self.ax3.set_ylim(1, 20)
         self.figure = fig
         plt.subplots_adjust(left=0.01, bottom=0.01,
                             right=0.99, top=0.99, wspace=0, hspace=0)
         plt.margins(2)
-        # self.ax1.patch.set_alpha(0.0)
-        # fig.patch.set_facecolor('grey')
-        # self.figure.patch.set_alpha(0.1)
 
         super().__init__(fig)
 
@@ -255,8 +176,9 @@ class GraphWidget(QWidget):
             if grids[2]:
                 ax3.grid(grids[2], linestyle='--', color='b')
 
-        # Legends and labels according to shown data type
-        # ax1.legend(frameon=True)
+        # Legends and labels according to shown data type. 
+        # If shown data is forecast, legends and labels only for temperature and wind
+        # If shown data is observed, also cloudcoverage is shown
         line, label = ax1.get_legend_handles_labels()
         line2, label2 = ax2.get_legend_handles_labels()
         if self.dataTypeForecast:
@@ -334,11 +256,5 @@ class GraphWidget(QWidget):
         """
         radioButton = self.sender()
         span = radioButton.text()[:-1]
-        # radioButton.isChecked()
         self.span = int(span)
         self.format_xaxis()
-
-#app = QApplication([])
-#graph = GraphWidget(forecast)
-#graph = GraphWidget(observed)
-#app.exec_()

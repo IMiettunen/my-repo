@@ -11,7 +11,7 @@ Timelines can be saved and the saved files loaded back to the program in order t
 
 import pathlib
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QFileDialog
+from PyQt5.QtWidgets import QWidget
 import json
 
 
@@ -202,7 +202,6 @@ class SidePanel(QWidget):
             QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         search_layout.addWidget(search_label)
         self.search_push_button = QtWidgets.QPushButton("Search")
-        # self.search_push_button.clicked.connect(self.search_with_selected_data)
         self.search_push_button.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         search_layout.addWidget(self.search_push_button)
@@ -361,7 +360,6 @@ class SidePanel(QWidget):
         :return: dict, side panel settings
         """
 
-        # return dict of settings
         return {
             "city": self.city_selection_combo_box.currentText(),
             "weatherInfo": self.weather_info_checkbox.isChecked(),
@@ -394,7 +392,6 @@ class SidePanel(QWidget):
 
         settings[key] = selection
         f = open(path, "w")
-        # prettify json
         json.dump(settings, f, indent=4)
         f.close()
 
@@ -438,7 +435,6 @@ class SidePanel(QWidget):
         """
 
         path = self.folder / 'controller' / 'saves' / 'selections' / 'settings.json'
-
         f = open(path, "r")
         settings = json.load(f)
         f.close()
