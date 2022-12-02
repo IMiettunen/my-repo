@@ -2,7 +2,7 @@
     "Select view": {},
     "Tampere": {
         "city": "Tampere",
-        "weatherInfo": false,
+        "weatherInfo": true,
         "roadInfo": {
             "roadCamera": false,
             "trafficMessages": false,
@@ -29,9 +29,9 @@
         "weatherInfo": false,
         "roadInfo": {
             "roadCamera": true,
-            "trafficMessages": false,
-            "roadMaintenance": false,
-            "roadCondition": false
+            "trafficMessages": true,
+            "roadMaintenance": true,
+            "roadCondition": true
         },
         "startDate": null,
         "endDate": null

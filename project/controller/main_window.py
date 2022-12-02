@@ -6,16 +6,17 @@ It's responsible for the communication between the view and the model.
 It's the only class that has access to the model and the view.
 
 """
-
+import os
 import sys
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
-import json
-import pathlib
 
-from project.controller.components.side_panel import SidePanel
-from project.controller.components.view_panel import ViewPanel
+from components.side_panel import SidePanel
+from components.view_panel import ViewPanel
 
+from view.data_visualization import *
+from view.graph import *
+from model.apirequests import*
 
 
 class UiMainWindow(QMainWindow):
@@ -24,11 +25,8 @@ class UiMainWindow(QMainWindow):
         super(QMainWindow, self).__init__()
 
         self.folder = pathlib.Path.cwd()
-
-        self.today_tab_content = QtWidgets.QWidget()
-        self.history_tab_content = QtWidgets.QWidget()
-        self.compare_tab_content_left = QtWidgets.QWidget()
-        self.compare_tab_content_right = QtWidgets.QWidget()
+        self.side_panel_object = None
+        self.view_panel_object = None
 
         self.setup_ui()
 
@@ -39,13 +37,13 @@ class UiMainWindow(QMainWindow):
         :return:
         """
 
-        hBox = QtWidgets.QHBoxLayout(self)
+        hBox = QtWidgets.QHBoxLayout()
         hBox.setContentsMargins(0, 1, 0, 0)
         hBox.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
 
         self.side_panel_object = SidePanel()
-        self.side_panel_widget = self.side_panel_object.get_side_panel()
-        hBox.addWidget(self.side_panel_widget)
+        side_panel_widget = self.side_panel_object.get_side_panel()
+        hBox.addWidget(side_panel_widget)
 
         self.side_panel_object.search_push_button.clicked.connect(self.search_with_selected_data)
         self.side_panel_object.save_timeline_push_button.clicked.connect(self.save_timeline)
@@ -53,11 +51,11 @@ class UiMainWindow(QMainWindow):
         self.side_panel_object.load_timeline_push_button_2.clicked.connect(self.display_timeline_right)
 
         self.view_panel_object = ViewPanel()
-        self.view_panel_widget = self.view_panel_object.get_view_panel()
+        self.view_panel_widget = self.view_panel_object.view_panel
         self.view_panel_widget.currentChanged.connect(self.change_tab)
         hBox.addWidget(self.view_panel_widget)
 
-        frame = QtWidgets.QFrame(self)
+        frame = QtWidgets.QFrame()
         frame.setLayout(hBox)
         self.setCentralWidget(frame)
 
@@ -73,7 +71,6 @@ class UiMainWindow(QMainWindow):
         """
 
         self.side_panel_object.set_tab_index(self.view_panel_widget.currentIndex())
-        print("change tab")
 
 
     def search_with_selected_data(self):
@@ -88,13 +85,31 @@ class UiMainWindow(QMainWindow):
 
         # VIEW JA MODEL EIVÄT SAA KOSKAAN KOMMUNIKOIDA SUORAAN KESKENÄÄN
 
-        print("search with selected data")
-
 
         settings = self.side_panel_object.get_current_settings()
+        data = {}
 
-        # tässä kohtaa kutsuu modelia ja hankkii datan
-        # sen jäkeen kutsuu viewiä ja näyttää datan
+        if settings["startDate"] != None:
+            #OBSERVED DATA
+            data['weatherData'] = weather_daily_measurements(settings["city"].upper(), datetime.strptime(settings["startDate"],'%Y-%m-%d'),
+                                                             datetime.strptime(settings["endDate"],'%Y-%m-%d'))
+            data['roadMaintenance'], data['trafficMessages'], data['roadCondition'] = road_data(
+                settings["city"].upper(), datetime.strptime(settings["startDate"], '%Y-%m-%d'), datetime.strptime(settings["endDate"], '%Y-%m-%d'))
+        else:
+            #WEATHER FORECAST
+            data['weatherData'] = weather_forecast(settings["city"].upper())
+            data['roadMaintenance'], data['trafficMessages'], data['roadCondition'] = road_data(settings["city"].upper())
+
+        data['roadCamera'] = weather_cameras(settings["city"].upper())
+
+        visualization = DataVisualization()
+        tabContentWidget = visualization.get_view(settings, self.view_panel_widget.currentIndex(), data)
+        
+        if settings["startDate"] != None:
+            self.view_panel_object.set_history_tab_content(tabContentWidget)
+            
+        else:
+            self.view_panel_object.set_today_tab_content(tabContentWidget)
 
 
 
@@ -104,7 +119,6 @@ class UiMainWindow(QMainWindow):
         :return:
         """
 
-        print("save timeline")
 
         settings = self.side_panel_object.get_current_settings()
         # Save data of all the graphs and plots, messages, etc. with the settings
@@ -115,7 +129,8 @@ class UiMainWindow(QMainWindow):
         }
 
         title = settings["city"] + " " + settings["startDate"] + " - " + settings["endDate"]
-        path = self.folder / 'controller' / 'saves' / 'timelines' / title + ".json"
+        file_name = f"{title}.json"
+        path = self.folder / 'controller' / 'saves' / 'timelines' / file_name
         f = open(path, "w")
         f.write(json.dumps(data, indent=4))
         f.close()
@@ -126,8 +141,6 @@ class UiMainWindow(QMainWindow):
         Loads timeline in json format
         :return:
         """
-
-        print("load timeline")
 
         path = self.folder / 'controller' / 'saves' / 'timelines'
         response = QFileDialog.getOpenFileName(
@@ -140,7 +153,6 @@ class UiMainWindow(QMainWindow):
             f = open(response[0], "r")
             data = json.load(f)
             f.close()
-            print(data)
 
     def display_timeline_left(self):
         """
@@ -171,6 +183,11 @@ def main():
     window.show()
     app.exec_()
 
+    # delete road camera image
+    try:
+        os.remove(pathlib.Path.cwd() / 'controller' / 'saves' / 'images' / 'weather_cam.jpg')
+    except:
+        pass
 
 if __name__ == "__main__":
     main()
