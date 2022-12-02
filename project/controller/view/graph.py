@@ -232,7 +232,7 @@ class GraphWidget(QWidget):
             # Tick frequency and tick label visibility
             self.sc.ax1.xaxis.set_major_locator(mdates.DayLocator(interval=1))
             # every Nth tick shown
-            N = 2
+            N = 1
             [l.set_visible(False) for (i, l) in enumerate(
                 self.sc.ax1.xaxis.get_ticklabels()) if i % N != 0]
             self.sc.figure.autofmt_xdate(rotation=50)
