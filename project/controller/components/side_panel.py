@@ -1,176 +1,56 @@
-import os
-import sys
+"""
+This class implements the side panel component of the main_window.
+
+Side panel has multiple selections that are only displayed at the corresponding tab.
+
+User can select location, data types to show and timeline.
+Settings can be saved as favourite and those favourites can be easily selected from the favourite views combo box.
+Timelines can be saved and the saved files loaded back to the program in order to compare different timelines side by side.
+
+"""
+
+import pathlib
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
+from PyQt5.QtWidgets import QWidget, QFileDialog
 import json
 
-from data_visualization import DataVisualization
 
-class UiMainWindow(QMainWindow):
+class SidePanel(QWidget):
 
     def __init__(self):
-        super().__init__()
-        self.setup_ui()
+        super(SidePanel, self).__init__()
 
-    def get_today_tab(self):
-        self.today_tab = QtWidgets.QWidget()
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
-        scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        scroll_area.setWidgetResizable(True)
+        self.folder = pathlib.Path.cwd()
+        self.tab_index = 0
 
-        scroll_area_layout = QtWidgets.QHBoxLayout()
-        scroll_area_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_area_layout.addWidget(scroll_area)
-        self.today_tab.setLayout(scroll_area_layout)
+        self.city_selection_widget = QtWidgets.QWidget()
+        self.data_selection_widget = QtWidgets.QWidget()
+        self.favourite_selection_widget = QtWidgets.QWidget()
+        self.timeline_selection_widget = QtWidgets.QWidget()
+        self.save_timeline_widget = QtWidgets.QWidget()
+        self.search_data_widget = QtWidgets.QWidget()
+        self.load_timeline_widget = QtWidgets.QWidget()
 
-        visulizer = DataVisualization()
-        buttons = visulizer.get_current_view()
-        spacer_layout = QtWidgets.QHBoxLayout()
-        horizontal_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        spacer_layout.addItem(horizontal_spacer)
-        spacer_layout.addWidget(buttons)
-        spacer_layout.addItem(horizontal_spacer)
-
-        foo = QtWidgets.QWidget()
-        foo.setLayout(spacer_layout)
-        scroll_area.setWidget(foo)
-
-        # spacer_layout = QtWidgets.QHBoxLayout()
-        # content_layout = QtWidgets.QVBoxLayout()
-        #
-        #
-        # title_layout = QtWidgets.QHBoxLayout()
-        # city_name_label = QtWidgets.QLabel("City name")
-        # font = QtGui.QFont()
-        # font.setPointSize(18)
-        # city_name_label.setFont(font)
-        # city_name_label.setFixedWidth(200)
-        # city_name_label.setAlignment(QtCore.Qt.AlignLeft)
-        # title_layout.addWidget(city_name_label)
-        #
-        # update_button_layout = QtWidgets.QHBoxLayout()
-        # update_button_layout.setSpacing(18)
-        # self.today_update_button_label = QtWidgets.QLabel("Last updated 00.00")
-        # self.today_update_button_label.setAlignment(
-        #     QtCore.Qt.AlignRight | QtCore.Qt.AlignCenter | QtCore.Qt.AlignTrailing)
-        # update_button_layout.addWidget(self.today_update_button_label)
-        #
-        # title_layout.addLayout(update_button_layout)
-        # content_layout.addLayout(title_layout)
-        #
-        # vertical_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        # content_layout.addItem(vertical_spacer)
-        #
-        # horizontal_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding,
-        #                                           QtWidgets.QSizePolicy.Expanding)
-        # spacer_layout.addItem(horizontal_spacer)
-        # spacer_layout.addLayout(content_layout)
-        # spacer_layout.addItem(horizontal_spacer)
-        #
-        # scroll_area.setLayout(spacer_layout)
-
-        return self.today_tab
-
-    def get_history_tab(self):
-        self.history_tab = QtWidgets.QWidget()
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
-        scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        scroll_area_layout = QtWidgets.QHBoxLayout()
-        scroll_area_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_area_layout.addWidget(scroll_area)
-        self.history_tab.setLayout(scroll_area_layout)
-
-        spacer_layout = QtWidgets.QHBoxLayout()
-        content_layout = QtWidgets.QVBoxLayout()
-
-        title_layout = QtWidgets.QHBoxLayout()
-        city_name_label = QtWidgets.QLabel("City name")
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        city_name_label.setFont(font)
-        city_name_label.setFixedWidth(200)
-        city_name_label.setAlignment(QtCore.Qt.AlignLeft)
-        title_layout.addWidget(city_name_label)
-
-        update_button_layout = QtWidgets.QHBoxLayout()
-        update_button_layout.setSpacing(18)
-        save_button_label = QtWidgets.QLabel("Save timeline with these settings")
-        save_button_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignCenter | QtCore.Qt.AlignTrailing)
-        update_button_layout.addWidget(save_button_label)
-
-        self.today_update_push_button = QtWidgets.QPushButton("Update")
-        self.today_update_push_button.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        update_button_layout.addWidget(self.today_update_push_button)
-
-        title_layout.addLayout(update_button_layout)
-        content_layout.addLayout(title_layout)
-
-        vertical_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        content_layout.addItem(vertical_spacer)
-
-        horizontal_spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding,
-                                                  QtWidgets.QSizePolicy.Expanding)
-        spacer_layout.addItem(horizontal_spacer)
-        spacer_layout.addLayout(content_layout)
-        spacer_layout.addItem(horizontal_spacer)
-
-        scroll_area.setLayout(spacer_layout)
-
-        return self.history_tab
-
-    def save_timeline(self):
-        settings = self.get_current_settings()
-        # Save data of all the graphs and plots, messages, etc. with the settings
-
-        data = {
-            "settings": settings,
-            "data": None,
-        }
-
-        title = settings["city"] + " " + settings["start date"] + " - " + settings["end date"]
-        f = open("data/saves/" + title + ".json", "w")
-        json.dump(data, f)
-        f.close()
-
-
-    def get_compare_tab(self):
-        self.compare_tab = QtWidgets.QWidget()
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setFrameShape(QtWidgets.QFrame.NoFrame)
-        scroll_area.setGeometry(QtCore.QRect(0, 0, 1300, 900))
-        scroll_area.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        scroll_area_layout = QtWidgets.QHBoxLayout()
-        scroll_area_layout.setContentsMargins(0, 0, 0, 0)
-        scroll_area_layout.addWidget(scroll_area)
-        self.compare_tab.setLayout(scroll_area_layout)
-
-        return self.compare_tab
-
-
-    def get_view_panel(self):
-        self.view_panel = QtWidgets.QTabWidget()
-        # self.view_panel.resize(QtCore.QRect(300, 0, 1300, 900))
-        self.view_panel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        self.view_panel.addTab(self.get_today_tab(), "")
-        self.view_panel.setTabText(self.view_panel.indexOf(self.today_tab), "Today")
-        self.view_panel.addTab(self.get_history_tab(), "")
-        self.view_panel.setTabText(self.view_panel.indexOf(self.history_tab), "History")
-        self.view_panel.addTab(self.get_compare_tab(), "")
-        self.view_panel.setTabText(self.view_panel.indexOf(self.compare_tab), "Compare")
-        self.view_panel.setCurrentIndex(0)
-        self.view_panel.currentChanged.connect(self.handle_side_panel_items_visibility)
         self.handle_side_panel_items_visibility()
 
-        return self.view_panel
+
+    def set_tab_index(self, index):
+        """
+        Sets the tab index and changes the side panel view accordingly
+        :param index: int, index of the current tab
+        :return:
+        """
+
+        self.tab_index = index
+        self.handle_side_panel_items_visibility()
+
 
     def get_side_panel(self):
+        """
+        Lays out the side panel
+        :return:
+        """
+
         side_panel = QtWidgets.QWidget(self)
         side_panel.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         side_panel.setGeometry(QtCore.QRect(0, 0, 300, 900))
@@ -182,7 +62,6 @@ class UiMainWindow(QMainWindow):
         side_panel_items_layout = QtWidgets.QVBoxLayout(side_panel_items)
         side_panel_items_layout.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         side_panel_items_layout.setContentsMargins(18, 6, 18, 0)
-        #side_panel_items_layout.setSpacing(18)
 
         application_title_label = QtWidgets.QLabel("Road Watch")
         font = QtGui.QFont()
@@ -202,9 +81,9 @@ class UiMainWindow(QMainWindow):
         self.city_selection_combo_box.addItems(["Tampere", "Helsinki", "Oulu", "Turku", "Lappeenranta"])
         self.city_selection_combo_box.currentIndexChanged.connect(self.city_selection_combo_box_changed)
         city_selection_layout.addWidget(self.city_selection_combo_box)
-        self.city_selection = QtWidgets.QWidget()
-        self.city_selection.setLayout(city_selection_layout)
-        side_panel_items_layout.addWidget(self.city_selection)
+
+        self.city_selection_widget.setLayout(city_selection_layout)
+        side_panel_items_layout.addWidget(self.city_selection_widget)
 
         data_selection_layout = QtWidgets.QVBoxLayout()
         data_selection_label = QtWidgets.QLabel("Select data")
@@ -236,9 +115,8 @@ class UiMainWindow(QMainWindow):
         self.road_info_sub_selection_checkboxes = [self.road_camera_checkbox, self.traffic_messages_checkbox,
                                                    self.road_maintenance_checkbox, self.road_condition_checkbox]
         data_selection_layout.addLayout(road_info_sub_selection_layout)
-        self.data_selection = QtWidgets.QWidget()
-        self.data_selection.setLayout(data_selection_layout)
-        side_panel_items_layout.addWidget(self.data_selection)
+        self.data_selection_widget.setLayout(data_selection_layout)
+        side_panel_items_layout.addWidget(self.data_selection_widget)
 
         favourite_selection_layout = QtWidgets.QVBoxLayout()
         save_favourite_layout = QtWidgets.QHBoxLayout()
@@ -264,12 +142,10 @@ class UiMainWindow(QMainWindow):
         self.initialize_favourite_selection_combo_box()  # Adds saved favourites to the combo box
         self.favourite_selection_combo_box.currentIndexChanged.connect(self.load_favourite_settings)
         favourite_selection_layout.addWidget(self.favourite_selection_combo_box)
-        self.favourite_selection = QtWidgets.QWidget()
-        self.favourite_selection.setLayout(favourite_selection_layout)
-        side_panel_items_layout.addWidget(self.favourite_selection)
+        self.favourite_selection_widget.setLayout(favourite_selection_layout)
+        side_panel_items_layout.addWidget(self.favourite_selection_widget)
 
         timeline_selection_layout = QtWidgets.QVBoxLayout()
-        #timeline_selection_layout.setSpacing(24)
         timeline_label = QtWidgets.QLabel("Select timeline")
         timeline_label.setFont(font)
         timeline_selection_layout.addWidget(timeline_label)
@@ -303,9 +179,8 @@ class UiMainWindow(QMainWindow):
         date_selections_layout.addLayout(end_date_selection_layout)
         timeline_selection_layout.addLayout(date_selections_layout)
 
-        self.timeline_selection = QtWidgets.QWidget()
-        self.timeline_selection.setLayout(timeline_selection_layout)
-        side_panel_items_layout.addWidget(self.timeline_selection)
+        self.timeline_selection_widget.setLayout(timeline_selection_layout)
+        side_panel_items_layout.addWidget(self.timeline_selection_widget)
 
         save_timeline_layout = QtWidgets.QHBoxLayout()
         save_timeline_layout.setSpacing(18)
@@ -313,14 +188,12 @@ class UiMainWindow(QMainWindow):
         save_timeline_label.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         save_timeline_layout.addWidget(save_timeline_label)
-        save_timeline_push_button = QtWidgets.QPushButton("Save")
-        save_timeline_push_button.clicked.connect(self.save_timeline)
-        save_timeline_push_button.setSizePolicy(
+        self.save_timeline_push_button = QtWidgets.QPushButton("Save")
+        self.save_timeline_push_button.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        save_timeline_layout.addWidget(save_timeline_push_button)
-        self.save_timeline = QtWidgets.QWidget()
-        self.save_timeline.setLayout(save_timeline_layout)
-        side_panel_items_layout.addWidget(self.save_timeline)
+        save_timeline_layout.addWidget(self.save_timeline_push_button)
+        self.save_timeline_widget.setLayout(save_timeline_layout)
+        side_panel_items_layout.addWidget(self.save_timeline_widget)
 
         search_layout = QtWidgets.QHBoxLayout()
         search_layout.setSpacing(18)
@@ -329,13 +202,13 @@ class UiMainWindow(QMainWindow):
             QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         search_layout.addWidget(search_label)
         self.search_push_button = QtWidgets.QPushButton("Search")
+        # self.search_push_button.clicked.connect(self.search_with_selected_data)
         self.search_push_button.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         search_layout.addWidget(self.search_push_button)
-        self.search_data = QtWidgets.QWidget()
-        self.search_data.setLayout(search_layout)
-        side_panel_items_layout.addWidget(self.search_data)
-        
+        self.search_data_widget.setLayout(search_layout)
+        side_panel_items_layout.addWidget(self.search_data_widget)
+
         load_timeline_layout = QtWidgets.QVBoxLayout()
         load_button_layout_1 = QtWidgets.QHBoxLayout()
         load_button_layout_1.setSpacing(18)
@@ -343,11 +216,10 @@ class UiMainWindow(QMainWindow):
         select_timeline_label_1.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         load_button_layout_1.addWidget(select_timeline_label_1)
-        load_timeline_push_button_1 = QtWidgets.QPushButton("Load")
-        load_timeline_push_button_1.clicked.connect(self.load_timeline)
-        load_timeline_push_button_1.setSizePolicy(
+        self.load_timeline_push_button_1 = QtWidgets.QPushButton("Load")
+        self.load_timeline_push_button_1.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        load_button_layout_1.addWidget(load_timeline_push_button_1)
+        load_button_layout_1.addWidget(self.load_timeline_push_button_1)
         load_timeline_layout.addLayout(load_button_layout_1)
         load_button_layout_2 = QtWidgets.QHBoxLayout()
         load_button_layout_2.setSpacing(18)
@@ -355,32 +227,54 @@ class UiMainWindow(QMainWindow):
         select_timeline_label_2.setAlignment(
             QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         load_button_layout_2.addWidget(select_timeline_label_2)
-        load_timeline_push_button_2 = QtWidgets.QPushButton("Load")
-        load_timeline_push_button_2.clicked.connect(self.load_timeline)
-        load_timeline_push_button_2.setSizePolicy(
+        self.load_timeline_push_button_2 = QtWidgets.QPushButton("Load")
+        self.load_timeline_push_button_2.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        load_button_layout_2.addWidget(load_timeline_push_button_2)
+        load_button_layout_2.addWidget(self.load_timeline_push_button_2)
         load_timeline_layout.addLayout(load_button_layout_2)
-        self.load_timeline = QtWidgets.QWidget()
-        self.load_timeline.setLayout(load_timeline_layout)
-        side_panel_items_layout.addWidget(self.load_timeline)
+        self.load_timeline_widget.setLayout(load_timeline_layout)
+        side_panel_items_layout.addWidget(self.load_timeline_widget)
 
         spacerItem = QtWidgets.QSpacerItem(300, 200, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         side_panel_items_layout.addItem(spacerItem)
 
         return side_panel
 
+
     def clear_all_info_selections(self):
+        """
+        Clears all checkboxes
+        :return:
+        """
+
         self.weather_info_checkbox.setChecked(not QtCore.Qt.Checked)
         self.road_info_checkbox.setChecked(not QtCore.Qt.Checked)
 
+
     def city_selection_combo_box_changed(self):
+        """
+        Resets the favourite selection combo box when city selection combo box changes
+        :return:
+        """
+
         self.favourite_selection_combo_box.setCurrentIndex(0)
+
 
     def weather_info_checkbox_changed(self):
+        """
+        Resets the favourite selection combo box when weather info checkbox changes
+        :return:
+        """
+
         self.favourite_selection_combo_box.setCurrentIndex(0)
 
+
     def select_all_sub_selections(self):
+        """
+        Changes all sub selection checkbox checks for road info when the road info checkbox is clicked
+        :return:
+        """
+
         if self.road_info_checkbox.checkState() == QtCore.Qt.PartiallyChecked:
             self.road_info_checkbox.blockSignals(True)
             self.road_info_checkbox.setCheckState(QtCore.Qt.Checked)
@@ -392,7 +286,13 @@ class UiMainWindow(QMainWindow):
                 checkbox.setChecked(not checkbox.isChecked())
                 checkbox.blockSignals(False)
 
+
     def change_sub_selection_state(self):
+        """
+        Handles the road info checkbox status based on sub selections checked
+        :return:
+        """
+
         self.favourite_selection_combo_box.setCurrentIndex(0)
 
         sub_selections_checked = len(list(filter(lambda cb: cb.isChecked(), self.road_info_sub_selection_checkboxes)))
@@ -409,40 +309,58 @@ class UiMainWindow(QMainWindow):
             self.road_info_checkbox.setCheckState(QtCore.Qt.Checked)
             self.road_info_checkbox.blockSignals(False)
 
+
     def set_max_min_dates(self):
+        """
+        Sets min and max dates for the timeline selection to prevent odd timelines
+        :return:
+        """
+
         min_end_date = self.start_date_edit.date()
         self.end_date_edit.setMinimumDate(min_end_date)
 
         max_start_date = self.end_date_edit.date()
         self.start_date_edit.setMaximumDate(max_start_date)
 
+
     def handle_side_panel_items_visibility(self):
-        if self.view_panel.currentIndex() == 0:
-            self.city_selection.show()
-            self.data_selection.show()
-            self.favourite_selection.show()
-            self.search_data.show()
-            self.timeline_selection.hide()
-            self.save_timeline.hide()
-            self.load_timeline.hide()
-        elif self.view_panel.currentIndex() == 1:
-            self.city_selection.show()
-            self.data_selection.show()
-            self.favourite_selection.hide()
-            self.search_data.show()
-            self.timeline_selection.show()
-            self.save_timeline.show()
-            self.load_timeline.hide()
-        elif self.view_panel.currentIndex() == 2:
-            self.city_selection.hide()
-            self.data_selection.hide()
-            self.favourite_selection.hide()
-            self.search_data.hide()
-            self.timeline_selection.hide()
-            self.save_timeline.hide()
-            self.load_timeline.show()
+        """
+        Changes side panel view based on the tab currently open
+        :return:
+        """
+
+        if self.tab_index == 0:
+            self.city_selection_widget.show()
+            self.data_selection_widget.show()
+            self.favourite_selection_widget.show()
+            self.search_data_widget.show()
+            self.timeline_selection_widget.hide()
+            self.save_timeline_widget.hide()
+            self.load_timeline_widget.hide()
+        elif self.tab_index == 1:
+            self.city_selection_widget.show()
+            self.data_selection_widget.show()
+            self.favourite_selection_widget.hide()
+            self.search_data_widget.show()
+            self.timeline_selection_widget.show()
+            self.save_timeline_widget.show()
+            self.load_timeline_widget.hide()
+        elif self.tab_index == 2:
+            self.city_selection_widget.hide()
+            self.data_selection_widget.hide()
+            self.favourite_selection_widget.hide()
+            self.search_data_widget.hide()
+            self.timeline_selection_widget.hide()
+            self.save_timeline_widget.hide()
+            self.load_timeline_widget.show()
+
 
     def get_current_settings(self):
+        """
+        Collects current side panel settings and returns them
+        :return: dict, side panel settings
+        """
+
         # return dict of settings
         return {
             "city": self.city_selection_combo_box.currentText(),
@@ -454,16 +372,22 @@ class UiMainWindow(QMainWindow):
                 "roadCondition": self.road_condition_checkbox.isChecked(),
             },
             "startDate": (self.start_date_edit.date().toString(
-                QtCore.Qt.ISODate) if self.view_panel.currentIndex() == 1 else None),
+                QtCore.Qt.ISODate) if self.tab_index == 1 else None),
             "endDate": (
-                self.end_date_edit.date().toString(QtCore.Qt.ISODate) if self.view_panel.currentIndex() == 1 else None),
+                self.end_date_edit.date().toString(QtCore.Qt.ISODate) if self.tab_index == 1 else None),
         }
 
+
     def set_favourite_settings(self):
+        """
+        Saves settings as favourite in json format
+        :return:
+        """
+
         selection = self.get_current_settings()
 
         key = selection['city']
-        path = "data\saved selections\settings.json"
+        path = self.folder / 'controller' / 'saves' / 'selections' / 'settings.json'
         f = open(path, "r")
         settings = json.load(f)
         f.close()
@@ -481,8 +405,14 @@ class UiMainWindow(QMainWindow):
         self.favourite_selection_combo_box.addItem(key)
         self.favourite_selection_combo_box.setCurrentText(key)
 
+
     def load_favourite_settings(self):
-        path = "data\saved selections\settings.json"
+        """
+        Loads favourite settings
+        :return:
+        """
+
+        path = self.folder / 'controller' / 'saves' / 'selections' / 'settings.json'
         f = open(path, "r")
         settings = json.load(f)
         f.close()
@@ -499,67 +429,19 @@ class UiMainWindow(QMainWindow):
 
         self.favourite_selection_combo_box.setCurrentText(key)
 
+
+
     def initialize_favourite_selection_combo_box(self):
-        path = "data\saved selections\settings.json"
+        """
+        Sets up values for favourite selection combo box when the component is created
+        :return:
+        """
+
+        path = self.folder / 'controller' / 'saves' / 'selections' / 'settings.json'
+
         f = open(path, "r")
         settings = json.load(f)
         f.close()
         for key in settings.keys():
             self.favourite_selection_combo_box.addItem(key)
 
-    def setup_ui(self):
-
-        hBox = QtWidgets.QHBoxLayout(self)
-        hBox.setContentsMargins(0, 1, 0, 0)
-        hBox.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
-        hBox.addWidget(self.get_side_panel())
-        hBox.addWidget(self.get_view_panel())
-
-        frame = QtWidgets.QFrame(self)
-        frame.setLayout(hBox)
-        self.setCentralWidget(frame)
-
-        self.setGeometry(0, 0, 1600, 900)
-        self.setMinimumSize(QtCore.QSize(1600, 900))
-        self.setWindowTitle("Road Watch")
-
-
-    def save_timeline(self):
-        settings = self.get_current_settings()
-        # Save data of all the graphs and plots, messages, etc. with the settings
-
-        data = {
-            "settings": settings,
-            "data": None,
-        }
-
-        title = settings["city"] + " " + settings["startDate"] + " - " + settings["endDate"]
-        f = open("data/saved timelines/" + title + ".json", "w")
-        # prettify json
-        f.write(json.dumps(data, indent=4))
-        f.close()
-
-
-    def load_timeline(self):
-        response = QFileDialog.getOpenFileName(
-            caption='Select saved timeline',
-            directory=os.getcwd() + '/data/saved timelines/',
-            filter='JSON files (*.json)',
-            initialFilter='JSON files (*.json)'
-        )
-        if response:
-            f = open(response[0], "r")
-            data = json.load(f)
-            f.close()
-            print(data)
-
-            # Display data
-
-def main():
-    app = QApplication(sys.argv)
-    window = UiMainWindow()
-    window.show()
-    app.exec()
-
-if __name__ == "__main__":
-    main()

@@ -146,7 +146,6 @@ class GraphWidget(QWidget):
 
         # Create buttons and radiobuttons according to visualized data
         if len(self.dataKeys) == 3:
-            print("LEN DATAKEYS: ", len(self.dataKeys))
             self.dataTypeForecast = True
             twoRB = QRadioButton("2h")
             twoRB.toggled.connect(self.onClicked)
@@ -191,12 +190,12 @@ class GraphWidget(QWidget):
             [0.2, 1.0, 0.2], [False, True, False], ['normal', 'bold', 'normal']))
         self.allButton.pressed.connect(lambda: self.draw_graph())
 
-        self.setMinimumSize(450, 100)
-        #self.resize(650, 400)
+        self.setMinimumSize(700, 600)
+        self.setMaximumSize(1300, 1000)
 
         # SET VISIBILITY OF WIDGET "WINDOW"
-        # self.setWindowFlags(PyQt5.QtCore.Qt.FramelessWindowHint)
-        # self.setAttribute(PyQt5.QtCore.Qt.WA_TranslucentBackground)
+        self.setWindowFlags(PyQt5.QtCore.Qt.FramelessWindowHint)
+        self.setAttribute(PyQt5.QtCore.Qt.WA_TranslucentBackground)
 
         self.show()
 
@@ -277,7 +276,7 @@ class GraphWidget(QWidget):
         Returns:
             int, int: indexes of values that limit x-axis
         """
-        now = dt.datetime.now().replace(day=28, hour=10, microsecond=0, second=0, minute=0)
+        now = dt.datetime.now()#.replace(microsecond=0, second=0, minute=0)
         startIndex = self.xData.index(now)
         end = now + dt.timedelta(hours=self.span)
         endIndex = self.xData.index(end)
@@ -290,8 +289,8 @@ class GraphWidget(QWidget):
         if self.dataTypeForecast:
             # Formats x-axis when visualizin forecast data
             # limits axis +-10minutes to show all datapoints properly
-            start, end = self.get_limits()
-            x_axis = self.xData[start:end+1]
+            #start, end = self.get_limits()
+            x_axis = self.xData[0:self.span+1]
             self.sc.ax1.xaxis.set_major_formatter(
                 mdates.DateFormatter("%H:%M"))
             self.sc.ax1.set_xlabel('Time')
@@ -314,7 +313,7 @@ class GraphWidget(QWidget):
             N = 2
             [l.set_visible(False) for (i, l) in enumerate(
                 self.sc.ax1.xaxis.get_ticklabels()) if i % N != 0]
-            self.sc.figure.autofmt_xdate(rotation=60)
+            self.sc.figure.autofmt_xdate(rotation=50)
 
         self.sc.draw()
 
