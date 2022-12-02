@@ -1,10 +1,41 @@
 # Project readme
 
-Most of the components in the project do not yet interact with one another.
+## Setup
 
-For the current implementation of the main_window user interface, pyqt5 is required
-"pip install pyqt5" in the python console to install it.
+This project is python based so python version 3.9 and corresponding version of pip must be installed.
 
-Implementations of graphs.py and apirequests.py are still in progress and they do not serve a purpose yet.
-They require at least the libraries matplotlib, numpy and requests to function.
-All of these can be installed with pip in the python console by stating "pip install x" with x being the corresponding library.
+All third party dependencies are located in requirements.txt and they can
+be installed by running the command 
+
+`python3 -m pip install -r requirements.txt`
+
+In command line terminal in the root folder of the project.
+
+## Startup
+
+The program is started by running the file main_window.py. This can be done in an IDE or by running it in the command line.
+
+
+First navigate to folder "project" by typing
+
+`cd project/`
+
+Next run the program by running
+
+`python3 controller/main_window.py`
+
+in the terminal.
+
+If you are instead using an IDE to run the main_window.py file make sure to configure the entire git repository as the project. Otherwise the path variables won't work properly.
+
+## Usage
+
+In the main window of the program you can look up data by selecting the city, selecting the data to be shown and pressing the search selected data -button.
+
+Configurations can be saved by pressing "Save as favourite" -button on the left. This will save a json file into the saves folder found within the project.
+
+The history tab in the top row allows you to select a single day for measured weather data. If you attempt to get data for multiple days the application will crash. It was intended to be adjustable but we didn't have time to implement it properly.
+
+The compare tab was meant to allow you to select two saved JSON objects and compare data stored within them. Due to time limitations we didn't have time to implement this properly so it won't work.
+
+To close the program, hit the x-button on the top right or find a bug that adequately crashes the application.
