@@ -5,8 +5,8 @@
         "weatherInfo": false,
         "roadInfo": {
             "roadCamera": false,
-            "trafficMessages": true,
-            "roadMaintenance": true,
+            "trafficMessages": false,
+            "roadMaintenance": false,
             "roadCondition": false
         },
         "startDate": null,
@@ -40,10 +40,10 @@
         "city": "Turku",
         "weatherInfo": false,
         "roadInfo": {
-            "roadCamera": false,
-            "trafficMessages": false,
-            "roadMaintenance": false,
-            "roadCondition": false
+            "roadCamera": true,
+            "trafficMessages": true,
+            "roadMaintenance": true,
+            "roadCondition": true
         },
         "startDate": null,
         "endDate": null

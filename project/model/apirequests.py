@@ -1,6 +1,8 @@
 """
 This file fetches data from digitraffic and the fmi
 
+It works as a model for the application.
+
 For data, a start and end time are required.
 
 For a forecast, the end time of the forecast is required.
@@ -310,7 +312,7 @@ def weather_cameras(city):
     image_response = requests.get(image_url)
 
     if image_response.status_code == 200:  # 200 means response OK
-        with open("weather_cam.jpg", 'wb') as f:
+        with open("../weather_cam.jpg", 'wb') as f:
             f.write(image_response.content)
             return True
 
